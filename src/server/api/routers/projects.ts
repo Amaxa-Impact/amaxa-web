@@ -2,7 +2,8 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { projects } from "@/server/db/schema";
 import { insertProjectParams, partnerIdSchema } from "@/server/db/types/projects";
-import { eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
+import { filterColumn } from "@/lib/utils";
 
 export const projectRouter = createTRPCRouter({
   create: protectedProcedure
@@ -20,8 +21,22 @@ export const projectRouter = createTRPCRouter({
     }),
 
   all: publicProcedure
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.db.select().from(projects).where(eq(projects.isPublic, true))
+    .input(z.object({
+      name: z.string().optional()
+    }))
+    .query(async ({ ctx, input }) => {
+
+      const { name } = input
+
+      const condition = and(
+        name ? filterColumn({ column: projects.name, value: name }) : undefined,
+      );
+
+      const data = await ctx.db.query.projects.findMany({
+        where: condition
+      });
+
+      return data
     })
 
 })

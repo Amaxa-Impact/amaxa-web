@@ -10,6 +10,7 @@ import DiscordProvider from "next-auth/providers/google";
 
 import { env } from "@/env";
 import { db } from "@/server/db";
+import { redirect } from "next/navigation";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -71,3 +72,13 @@ export const authOptions: NextAuthOptions = {
  * @see https://next-auth.js.org/configuration/nextjs
  */
 export const getServerAuthSession = () => getServerSession(authOptions);
+
+export const getUserAuth = async () => {
+  const session = await getServerSession(authOptions);
+  return { session };
+};
+
+export const checkAuth = async () => {
+  const { session } = await getUserAuth();
+  if (!session) redirect("/api/auth/signin");
+};

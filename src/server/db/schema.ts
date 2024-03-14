@@ -1,11 +1,14 @@
 import { relations, sql } from "drizzle-orm";
+import { UserPermissions } from "@/types/permissions"
 import {
   boolean,
   date,
   index,
   integer,
+  json,
   pgTable,
   primaryKey,
+  real,
   serial,
   text,
   timestamp,
@@ -47,6 +50,8 @@ export const users = pgTable("user", {
     mode: "date",
   }).default(sql`CURRENT_TIMESTAMP`),
   image: varchar("image", { length: 255 }),
+  permissions: json("permissions").$type<UserPermissions[]>().notNull().default(["none"]),
+  country: text("country"),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -118,14 +123,17 @@ export const verificationTokens = pgTable(
 export const projects = pgTable("projects", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  date: date("date").notNull(),
-  isPublic: boolean("is_public").notNull().default(false),
-  image: text("image").notNull().default("https://placehold.co/600x400"),
-  desc: text("description"),
+  desc: text("description").notNull().default(""),
+  challenge: text("challenge").notNull().default(""),
+  approach: text("approach").notNull().default(""),
+  progress: real("progress").default(0.0),
   createdAt: timestamp("created_at")
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
   updatedAt: timestamp("updatedAt"),
+  imageUrl: text("image").notNull().default("https://placehold.co/600x400"),
+  startDate: date("date").notNull(),
+  isPublic: boolean("is_public").notNull().default(false),
 
 });
 

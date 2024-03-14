@@ -11,6 +11,7 @@ import DiscordProvider from "next-auth/providers/google";
 import { env } from "@/env";
 import { db } from "@/server/db";
 import { redirect } from "next/navigation";
+import { UserPermissions } from "@/types/permissions";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -22,6 +23,7 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      permissions: UserPermissions[]
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
@@ -33,6 +35,21 @@ declare module "next-auth" {
   // }
 }
 
+async function getUserPermissions(id: string) {
+  const permissions = await db.query.users.findFirst({
+    where: (users, { eq }) => eq(users.id, id),
+    columns: {
+      permissions: true
+    }
+  })
+
+  if (!permissions) {
+    throw new Error(`User not found: ${id}`);
+  }
+
+  return permissions.permissions
+}
+
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  *
@@ -40,13 +57,17 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
+    session: async ({ session, user }) => ({
       ...session,
       user: {
         ...session.user,
         id: user.id,
+        permissions: await getUserPermissions(user.id)
       },
     }),
+  },
+  pages: {
+    newUser: "/auth/onboarding"
   },
   adapter: DrizzleAdapter(db) as Adapter,
   providers: [
@@ -82,3 +103,4 @@ export const checkAuth = async () => {
   const { session } = await getUserAuth();
   if (!session) redirect("/api/auth/signin");
 };
+export type AuthSession = Awaited<ReturnType<typeof getUserAuth>>;

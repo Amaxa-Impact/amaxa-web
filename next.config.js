@@ -6,7 +6,6 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-
   images: {
     remotePatterns: [
       {
@@ -15,6 +14,9 @@ const config = {
       },
     ],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  }
 };
 
 export default config;

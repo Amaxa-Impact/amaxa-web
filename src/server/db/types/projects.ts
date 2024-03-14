@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { z } from "zod";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { projects } from "../schema";

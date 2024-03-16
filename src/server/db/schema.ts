@@ -1,3 +1,4 @@
+//TODO: Seperate schema into folder and files
 import { relations, sql } from "drizzle-orm";
 import { UserPermissions } from "@/types/permissions"
 import {
@@ -15,6 +16,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
+import { z } from "zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -134,9 +136,12 @@ export const projects = pgTable("projects", {
   imageUrl: text("image").notNull().default("https://placehold.co/600x400"),
   startDate: date("date").notNull(),
   isPublic: boolean("is_public").notNull().default(false),
-
 });
 
+export const projectsRelations = relations(projects, ({ many }) => ({
+  projectToGuides: many(projectToGuides)
+
+}))
 export const events = pgTable("events", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }),
@@ -151,3 +156,31 @@ export const events = pgTable("events", {
     .notNull(),
   updatedAt: timestamp("updatedAt"),
 })
+
+export const guides = pgTable("guides", {
+  id: serial("id").primaryKey(),
+  embedLink: text("embed_link"),
+})
+
+export const guidesRelations = relations(guides, ({ many }) => ({
+  projects: many(projectToGuides),
+}))
+
+export const projectToGuides = pgTable("projectToGuides", {
+  projectId: integer("project_id"),
+  guideId: integer("guide_id")
+
+}, (t) => ({
+  pk: primaryKey(t.guideId, t.projectId)
+}))
+
+export const projectToGuidesRelations = relations(projectToGuides, ({ one }) => ({
+  project: one(projects, {
+    fields: [projectToGuides.projectId],
+    references: [projects.id]
+  }),
+  guide: one(guides, {
+    fields: [projectToGuides.guideId],
+    references: [guides.id]
+  }),
+}))

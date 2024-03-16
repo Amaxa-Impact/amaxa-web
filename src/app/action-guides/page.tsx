@@ -8,6 +8,8 @@ import Search from "@/components/Search";
 import Image from "next/image"
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { CreateProjects } from "@/components/CreateProjects";
+import { FilterProject } from "./filters/project";
+import { FilterSkill } from "./filters/skill";
 
 
 const searchParamsSchema = z.object({
@@ -22,22 +24,25 @@ export default async function Home(props: {
   noStore();
   await checkAuth()
   const { name } = searchParamsSchema.parse(props.searchParams);
-  const { session } = await getUserAuth();
 
 
-  const data = await api.projects.all.query({
+  const data = await api.actionGuides.all.query({
     name: name
   })
   return (
     <div className="flex flex-col gap-10 p-20">
       <div className="flex flex-row justify-between">
         <Search />
-        <CreateProjects />
+        <div className="flex flex-row gap-3">
+          <FilterProject />
+          <FilterSkill />
+        </div>
+
       </div>
       <div className="grid grid-rows-1 gap-10 md:grid-cols-2 md:grid-rows-2">
         {data.map((subject) => {
           return (
-            <Link key={subject.id} href={`/project/${subject.id}`}>
+            <Link key={subject.id} href={`/action-guides/${subject.id}`}>
               <Card className=" col-span-1 row-span-1 bg-primary-foreground transition-transform duration-200 hover:scale-105 hover:bg-muted">
                 <CardContent className="py-5">
                   <Image
@@ -48,6 +53,7 @@ export default async function Home(props: {
                   />
                 </CardContent>
                 <CardFooter className="justify-center text-center font-bold md:text-2xl">
+                  {subject.name}
                 </CardFooter>
               </Card>
             </Link>

@@ -159,7 +159,8 @@ export const events = pgTable("events", {
 
 export const guides = pgTable("guides", {
   id: serial("id").primaryKey(),
-  embedLink: text("embed_link"),
+  name: text("name"),
+  embedId: text("embed_id"),
 })
 
 export const guidesRelations = relations(guides, ({ many }) => ({
@@ -169,7 +170,6 @@ export const guidesRelations = relations(guides, ({ many }) => ({
 export const projectToGuides = pgTable("projectToGuides", {
   projectId: integer("project_id"),
   guideId: integer("guide_id")
-
 }, (t) => ({
   pk: primaryKey(t.guideId, t.projectId)
 }))
@@ -184,3 +184,28 @@ export const projectToGuidesRelations = relations(projectToGuides, ({ one }) => 
     references: [guides.id]
   }),
 }))
+
+export const skills = pgTable("skills", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull()
+})
+
+export const skillToGuides = pgTable("skillToGuides", {
+  skillId: integer("skillId"),
+  guideId: integer("guide_id")
+
+}, (t) => ({
+  pk: primaryKey(t.guideId, t.skillId)
+}))
+
+export const skillToGuidesRelations = relations(skillToGuides, ({ one }) => ({
+  skills: one(skills, {
+    fields: [skillToGuides.skillId],
+    references: [skills.id]
+  }),
+  guide: one(guides, {
+    fields: [skillToGuides.guideId],
+    references: [guides.id]
+  }),
+}))
+

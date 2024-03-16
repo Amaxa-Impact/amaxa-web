@@ -38,6 +38,8 @@ export function CreateProjects() {
       <AlertDialogContent>
         <AutoForm formSchema={insertProjectParams.extend({
           startDate: z.coerce.date()
+          //FIX: Make textboxes and not inputs 
+
         })} fieldConfig={{
           startDate: {
             fieldType: "date"

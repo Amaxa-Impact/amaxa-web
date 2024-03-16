@@ -11,7 +11,6 @@ export const inserteventschema =
   createInsertSchema(events).omit(timestamps);
 export const insertEventsParams = baseSchema
   .extend({
-    isVerified: z.coerce.boolean(),
   })
   .omit({
     id: true,
@@ -19,7 +18,6 @@ export const insertEventsParams = baseSchema
 
 export const updateeventschema = baseSchema;
 export const updateProjectParams = baseSchema.extend({
-  isVerified: z.coerce.boolean(),
 });
 export const partnerIdSchema = baseSchema.pick({ id: true });
 

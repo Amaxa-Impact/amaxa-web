@@ -1,5 +1,3 @@
-
-
 export const user_permissions = [
   "none",
   "read:users",
@@ -10,4 +8,5 @@ export const user_permissions = [
   "edit:tags",
   "edit:events",
 ] as const;
+
 export type UserPermissions = (typeof user_permissions)[number];

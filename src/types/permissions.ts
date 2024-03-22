@@ -4,6 +4,7 @@ export const user_permissions = [
   "add:project",
   "add:tags",
   "add:events",
+  "add:action_guide",
   "edit:project",
   "edit:tags",
   "edit:events",

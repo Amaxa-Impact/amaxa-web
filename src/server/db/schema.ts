@@ -163,8 +163,10 @@ export const guides = pgTable("guides", {
   embedId: text("embed_id"),
 })
 
+
 export const guidesRelations = relations(guides, ({ many }) => ({
   projects: many(projectToGuides),
+  skills: many(skillToGuides)
 }))
 
 export const projectToGuides = pgTable("projectToGuides", {

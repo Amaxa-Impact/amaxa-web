@@ -12,7 +12,7 @@ export const FilterProject = async () => {
 
   return (
     <div>
-      <PickerForm data={courseData} key="project" />
+      <PickerForm data={courseData} idx="project" />
     </div>
   );
 }

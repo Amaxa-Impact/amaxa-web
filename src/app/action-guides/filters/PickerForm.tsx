@@ -23,20 +23,20 @@ type CourseData = {
   label: string;
 };
 
-export function PickerForm(props: { data: CourseData[], key: string }) {
+export function PickerForm(props: { data: CourseData[], idx: string }) {
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { data, key } = props;
-  const [value, setValue] = React.useState(searchParams.get(key) ?? "");
+  const { data, idx } = props;
+  const [value, setValue] = React.useState(searchParams.get(idx) ?? "");
 
   function handleChange(value: string) {
     if (value == "" || value == " " || value == null || value === "clear") {
       return router.push(pathname);
     }
     setValue(value);
-    router.push(`${pathname}/?${key}=${value}`);
+    router.push(`${pathname}/?${idx}=${value}`);
   }
 
   return (
@@ -50,7 +50,7 @@ export function PickerForm(props: { data: CourseData[], key: string }) {
         >
           {value
             ? data.find((framework) => framework.value === parseInt(value))?.label
-            : `Select a ${props.key}`}
+            : `Select a ${props.idx}`}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

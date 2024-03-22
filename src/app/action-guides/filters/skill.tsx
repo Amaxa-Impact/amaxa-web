@@ -11,7 +11,7 @@ export const FilterSkill = async () => {
 
   return (
     <div>
-      <PickerForm data={courseData} key="project" />
+      <PickerForm data={courseData} idx="skill" />
     </div>
   );
 

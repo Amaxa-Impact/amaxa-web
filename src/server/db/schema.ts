@@ -7,6 +7,7 @@ import {
   index,
   integer,
   json,
+  jsonb,
   pgTable,
   primaryKey,
   real,
@@ -16,7 +17,6 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
-import { z } from "zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -54,10 +54,16 @@ export const users = pgTable("user", {
   image: varchar("image", { length: 255 }),
   permissions: json("permissions").$type<UserPermissions[]>().notNull().default(["none"]),
   country: text("country"),
+  projectId: integer("project_id"),
+
 });
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   accounts: many(accounts),
+  project: one(projects, {
+    fields: [users.projectId],
+    references: [projects.id]
+  })
 }));
 
 export const accounts = pgTable(
@@ -122,6 +128,7 @@ export const verificationTokens = pgTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 );
+
 export const projects = pgTable("projects", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
@@ -139,8 +146,9 @@ export const projects = pgTable("projects", {
 });
 
 export const projectsRelations = relations(projects, ({ many }) => ({
-  projectToGuides: many(projectToGuides)
-
+  projectToGuides: many(projectToGuides),
+  users: many(users),
+  nodes: many(nodes),
 }))
 export const events = pgTable("events", {
   id: serial("id").primaryKey(),
@@ -211,3 +219,44 @@ export const skillToGuidesRelations = relations(skillToGuides, ({ one }) => ({
   }),
 }))
 
+
+export const nodes = pgTable("nodes", {
+  id: text('id').primaryKey(),
+  projectId: integer("project_id").notNull(),
+  parentId: text("parent_id"),
+  type: text("node_type").notNull().default("custom"),
+  data: jsonb('data').notNull().$type<{
+    name: string,
+    assigne: number,
+    assigneName: string,
+    endDate: Date,
+  }>(),
+  position: jsonb('position').notNull().$type<{
+    x: number,
+    y: number
+  }>(),
+})
+
+export const edges = pgTable("edges", {
+  id: text("id").primaryKey(),
+  source: text("source").references(() => nodes.id).notNull(),
+  target: text("target").references(() => nodes.id).notNull(),
+  projectId: integer("project_id").notNull(),
+  // Add more edge-specific fields if needed
+});
+
+export type Edge = typeof edges.$inferSelect;
+
+export const nodeRelations = relations(nodes, ({ one }) => ({
+  project: one(projects, {
+    fields: [nodes.projectId],
+    references: [projects.id]
+  })
+}))
+
+export const edgesRelations = relations(edges, ({ one }) => ({
+  task: one(projects, {
+    fields: [edges.projectId],
+    references: [projects.id]
+  })
+}))

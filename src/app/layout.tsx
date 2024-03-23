@@ -6,6 +6,7 @@ import { TRPCReactProvider } from "@/trpc/react";
 import { ThemeProvider } from "@/components/theme-provider";
 import Sidebar from "@/components/Sidebar";
 import { Toaster } from "sonner";
+import FlowWithProvider from "./testlayout";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -38,7 +39,9 @@ export default function RootLayout({
             <div className="flex h-screen">
               <Sidebar />
               <main className="flex-1 overflow-y-auto p-8 pt-2 md:p-8 bg-background">
-                {children}
+                <FlowWithProvider>
+                  {children}
+                </FlowWithProvider>
                 <Toaster position="top-center" richColors />
               </main>
             </div>

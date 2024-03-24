@@ -11,6 +11,8 @@ export const projectRouter = createTRPCRouter({
     .input(insertProjectParams)
     .mutation(async ({ ctx, input }) => {
 
+      console.log(`crfaete project`);
+      
       await ctx.db.insert(projects).values(input);
       revalidatePath("/projects")
     }),

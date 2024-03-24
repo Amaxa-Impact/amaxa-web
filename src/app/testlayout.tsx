@@ -11,7 +11,7 @@ export function Flow(props: any) {
 }
 
 // wrapping with ReactFlowProvider is done outside of the component
-function FlowWithProvider({
+function FlowProvider({
   children
 }: {
   children: React.ReactNode
@@ -23,5 +23,5 @@ function FlowWithProvider({
   );
 }
 
-export default FlowWithProvider;
+export default FlowProvider;
 

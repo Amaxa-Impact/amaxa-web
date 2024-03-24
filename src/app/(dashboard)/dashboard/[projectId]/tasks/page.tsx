@@ -4,7 +4,7 @@ import { Node } from "reactflow"
 
 type NodeType = Node<{
   name: string,
-  assigne: number,
+  assigne: string,
   assigneName: string,
   endDate: Date,
 }>
@@ -32,19 +32,19 @@ export default async function Page({
       {
         id: '1',
         type: 'custom',
-        data: { name: 'Task 1', assigne: 1, endDate: new Date(), assigneName: "John Doe" },
+        data: { name: 'Task 1', assigne: "", endDate: new Date(), assigneName: "John Doe" },
         position: { x: 0, y: 50 },
       },
       {
         id: '2',
         type: 'custom',
-        data: { name: 'Task 2', assigne: 2, endDate: new Date(), assigneName: "John Doe" },
+        data: { name: 'Task 2', assigne: "", endDate: new Date(), assigneName: "John Doe" },
         position: { x: -200, y: 200 },
       },
       {
         id: '3',
         type: 'custom',
-        data: { name: 'Task 3', assigne: 3, endDate: new Date(), assigneName: "John Doe" },
+        data: { name: 'Task 3', assigne: "", endDate: new Date(), assigneName: "John Doe" },
         position: { x: 200, y: 200 },
       },
     ];
@@ -70,7 +70,7 @@ export default async function Page({
   }
 
   return (
-      <div className="w-full h-full">
+    <div className="w-full h-full">
       <Flow initNodes={nodes} initEdges={edges} projectId={projectId} />
     </div>
   )

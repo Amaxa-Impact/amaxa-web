@@ -57,6 +57,7 @@ export const actionGuideRouter = createTRPCRouter({
       if (!(ctx.session.user.permissions.includes("add:action_guide"))) {
         throw new Error("None")
       }
+      console.log(`crfaete action guide`);
 
       await ctx.db.insert(guides).values(input);
       revalidatePath("/action_guides")

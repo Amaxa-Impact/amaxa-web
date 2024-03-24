@@ -22,6 +22,12 @@ export const defaultLinks: SidebarLink[] = [
     href: "/action-guides",
     title: "Action Guides",
     icon: BookIcon
+  }, 
+  {
+    href: `/dashboard/1/home`,
+    title: "Test",
+    icon: BookIcon
+
   }
 
 ];

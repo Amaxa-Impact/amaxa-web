@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import ReactFlow, { useNodesState, useEdgesState, useReactFlow, Node, addEdge, MiniMap, Controls, OnConnectStart, OnConnectEnd } from 'reactflow';
 import { nanoid } from 'nanoid';
 
@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 
 type NodeType = Node<{
   name: string,
-  assigne: number,
+  assigne: string,
   assigneName: string,
   endDate: Date,
 }>
@@ -41,16 +41,29 @@ const Flow = ({
   const [edges, setEdges, onEdgesChange] = useEdgesState(initEdges);
   const { project } = useReactFlow();
   const connectingNodeId = useRef<string | null>(null);
+  let isEnabled = nodes === initNodes || edges === initEdges ? false : true
+  useEffect(() => {
+    isEnabled = nodes === initNodes || edges === initEdges ? false : true
+  }, [nodes, edges])
 
-  const { mutate: save } = api.tasks.createTask.useMutation({
+  const { mutate: save } = api.tasks.save.useMutation({
     onSuccess() {
       toast.success("Saved Succesfuly")
     },
     onError(error) {
       handleError(error)
     },
-
   })
+
+  const { mutate: create } = api.tasks.create.useMutation({
+    onSuccess() {
+      toast.success("Created Succesfuly")
+    },
+    onError(error) {
+      handleError(error)
+    },
+  })
+
   const onSubmit = () => {
     const formattedNodes = nodes.map((node) => ({
       id: node.id,
@@ -123,7 +136,7 @@ const Flow = ({
     const newNode = {
       id: nanoid(),
       type: 'custom',
-      data: { name: 'New Task', assigne: 0, endDate: new Date(), assigneName: "" },
+      data: { name: 'New Task', assigne: "", endDate: new Date(), assigneName: "" },
       position,
       parentNode: parentNode.id,
     };
@@ -133,32 +146,52 @@ const Flow = ({
       source: parentNode.id,
       target: newNode.id,
     };
-
     setNodes((nodes) => [...nodes, newNode]);
     setEdges((edges) => [...edges, newEdge]);
+
+    create({
+      task: {
+        id: newNode.id,
+        type: newNode.type,
+        data: {
+          ...newNode.data,
+          assigne: String(newNode.data.assigne)
+        },
+        position: newNode.position,
+        parentId: newNode.parentNode,
+        projectId: projectId
+      },
+      edges: {
+        ...newEdge,
+        projectId: projectId
+      }
+    })
   };
 
 
   return (
-      <div className="w-full h-full flex flex-col">
-      <Button onClick={onSubmit}>
+    <div className="min-w-full min-h-full flex flex-col" style={{
+      height: 900,
+      width: 900
+    }}>
+      <Button onClick={onSubmit} disabled={isEnabled}>
         Save
       </Button>
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      onConnectStart={onConnectStart}
-      onConnectEnd={onConnectEnd}
-      nodeTypes={nodeTypes}
-      fitView
-      className="bg-background"
-    >
-      <MiniMap />
-      <Controls />
-    </ReactFlow>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onConnectStart={onConnectStart}
+        onConnectEnd={onConnectEnd}
+        nodeTypes={nodeTypes}
+        fitView
+        className="bg-background"
+      >
+        <MiniMap />
+        <Controls />
+      </ReactFlow>
     </div>
   );
 };

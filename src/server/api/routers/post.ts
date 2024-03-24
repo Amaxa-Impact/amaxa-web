@@ -21,6 +21,7 @@ export const postRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       // simulate a slow db call
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log(`crfaete post`);
 
       await ctx.db.insert(posts).values({
         name: input.name,

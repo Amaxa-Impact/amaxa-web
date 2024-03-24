@@ -6,7 +6,7 @@ import { TRPCReactProvider } from "@/trpc/react";
 import { ThemeProvider } from "@/components/theme-provider";
 import Sidebar from "@/components/Sidebar";
 import { Toaster } from "sonner";
-import FlowWithProvider from "./testlayout";
+import FlowProvider from "./testlayout";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,7 +27,7 @@ export default function RootLayout({
   modal: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`font-sans ${inter.variable}`}>
         <ThemeProvider
           attribute="class"
@@ -39,9 +39,9 @@ export default function RootLayout({
             <div className="flex h-screen">
               <Sidebar />
               <main className="flex-1 overflow-y-auto p-8 pt-2 md:p-8 bg-background">
-                <FlowWithProvider>
+                <FlowProvider>
                   {children}
-                </FlowWithProvider>
+                </FlowProvider>
                 <Toaster position="top-center" richColors />
               </main>
             </div>

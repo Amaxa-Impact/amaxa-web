@@ -22,6 +22,23 @@ export const userRouter = createTRPCRouter({
       }).where(eq(users.id, userId))
 
       revalidatePath(`/user/${userId}`)
+    }),
+  byProjectId: protectedProcedure
+    .input(z.object({
+      id: z.number()
+    })).query(async ({ ctx, input }) => {
+      const data = await ctx.db.query.users.findMany({
+        where: (users, { eq }) => eq(users.projectId, input.id),
+        columns: {
+          id: true,
+          name: true
+        }
+      })
+      return data.map((item) => ({
+        label: item.name!,
+        value: item.id
+      }))
+
     })
 
 

@@ -17,6 +17,8 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
+import { createSelectSchema } from "drizzle-zod";
+import { z } from "zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -227,7 +229,7 @@ export const nodes = pgTable("nodes", {
   type: text("node_type").notNull().default("custom"),
   data: jsonb('data').notNull().$type<{
     name: string,
-    assigne: number,
+    assigne: string,
     assigneName: string,
     endDate: Date,
   }>(),
@@ -260,3 +262,20 @@ export const edgesRelations = relations(edges, ({ one }) => ({
     references: [projects.id]
   })
 }))
+
+export const updateTaskSchema = createSelectSchema(nodes, {
+  id: z.string(),
+  type: z.string().optional(),
+  projectId: z.number().optional(),
+  parentId: z.string().optional(),
+  data: z.object({
+    name: z.string(),
+    assigne: z.string(),
+    assigneName: z.string(),
+    endDate: z.date(),
+  }).optional(),
+  position: z.object({
+    x: z.number(),
+    y: z.number(),
+  }).optional()
+})

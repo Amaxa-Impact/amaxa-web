@@ -171,6 +171,10 @@ export const guides = pgTable("guides", {
   id: serial("id").primaryKey(),
   name: text("name"),
   embedId: text("embed_id"),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
 })
 
 
@@ -199,11 +203,19 @@ export const projectToGuidesRelations = relations(projectToGuides, ({ one }) => 
 
 export const skills = pgTable("skills", {
   id: serial("id").primaryKey(),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
   name: text("name").notNull()
 })
 
 export const skillToGuides = pgTable("skillToGuides", {
   skillId: integer("skillId"),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
   guideId: integer("guide_id")
 
 }, (t) => ({
@@ -227,6 +239,10 @@ export const nodes = pgTable("nodes", {
   projectId: integer("project_id").notNull(),
   parentId: text("parent_id"),
   type: text("node_type").notNull().default("custom"),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
   data: jsonb('data').notNull().$type<{
     name: string,
     assigne: string,
@@ -244,6 +260,10 @@ export const edges = pgTable("edges", {
   source: text("source").references(() => nodes.id).notNull(),
   target: text("target").references(() => nodes.id).notNull(),
   projectId: integer("project_id").notNull(),
+  createdAt: timestamp("created_at")
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updatedAt"),
   // Add more edge-specific fields if needed
 });
 
@@ -277,5 +297,5 @@ export const updateTaskSchema = createSelectSchema(nodes, {
   position: z.object({
     x: z.number(),
     y: z.number(),
-  }).optional()
+  }).optional(),
 })

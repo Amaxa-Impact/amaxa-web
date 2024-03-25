@@ -118,16 +118,20 @@ const Flow = ({
   };
 
   const onConnectEnd: OnConnectEnd = useCallback((event) => {
-    const targetIsPane = (event.target as Element).classList.contains(
+    const targetIsPane = (event.target as Element)?.classList.contains(
       'react-flow__pane',
     );
 
     if (targetIsPane && connectingNodeId.current) {
       const parentNode = nodes.find((node) => node.id === connectingNodeId.current);
-      const childNodePosition = getChildNodePosition(event, parentNode);
 
-      if (parentNode && childNodePosition) {
-        addChildNode(parentNode, childNodePosition);
+      if (parentNode && event.target instanceof Element) {
+        const { top, left } = event.target.getBoundingClientRect();
+        const position = {
+          x: 'clientX' in event ? event.clientX - left : 0,
+          y: 'clientY' in event ? event.clientY - top : 0,
+        };
+        addChildNode(parentNode, position);
       }
     }
   }, [nodes]);
@@ -165,16 +169,14 @@ const Flow = ({
         ...newEdge,
         projectId: projectId
       }
-    })
+    });
   };
-
-
   return (
     <div className="min-w-full min-h-full flex flex-col" style={{
       height: 900,
       width: 900
     }}>
-      <Button onClick={onSubmit} disabled={isEnabled}>
+      <Button onClick={onSubmit} >
         Save
       </Button>
       <ReactFlow

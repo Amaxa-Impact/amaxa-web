@@ -5,9 +5,13 @@ export default function RootLayout({
 }) {
 
   return (
-    <div className="min-h-screen">
-      {children}
-    </div>
+    <html>
+      <body>
+        <div className="min-h-screen">
+          {children}
+        </div>
+      </body>
+    </html>
   )
 
 }

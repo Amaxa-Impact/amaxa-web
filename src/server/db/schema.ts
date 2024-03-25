@@ -19,6 +19,7 @@ import {
 import { type AdapterAccount } from "next-auth/adapters";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
+import { timestamps } from "@/lib/db";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -298,4 +299,4 @@ export const updateTaskSchema = createSelectSchema(nodes, {
     x: z.number(),
     y: z.number(),
   }).optional(),
-})
+}).omit(timestamps)

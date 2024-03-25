@@ -4,13 +4,17 @@ import { projects } from "@/server/db/schema";
 import { insertProjectParams, partnerIdSchema } from "@/server/db/types/projects";
 import { and, eq, inArray } from "drizzle-orm";
 import { filterColumn } from "@/lib/utils";
+import { revalidatePath } from "next/cache";
 
 export const projectRouter = createTRPCRouter({
   create: protectedProcedure
     .input(insertProjectParams)
     .mutation(async ({ ctx, input }) => {
 
+      console.log(`crfaete project`);
+      
       await ctx.db.insert(projects).values(input);
+      revalidatePath("/projects")
     }),
   byId: publicProcedure
     .input(partnerIdSchema)

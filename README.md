@@ -17,3 +17,65 @@ To learn more about the [Stack we use](https://create.t3.gg/), take a look at th
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
+# Project Setup Guide
+
+note: this will not work on school issued devices
+
+note 2: don't be afraid to ask tools like ChatGPT for help
+
+## Repo Setup
+
+First please clone the repo, if you have done this previously please run `git pull` before continuing.
+
+## Prerequisites
+
+### Node.js
+
+Ensure [Node.js](https://nodejs.org/en/learn/getting-started/how-to-install-nodejs#how-to-install-nodejs) is installed on your system.
+
+### Pnpm
+
+Install pnpm globally using npm:
+```
+npm install -g pnpm
+```
+
+## Environment Variables
+
+### Overview
+
+Environment variables allow you to manage project settings and secrets without hardcoding them into your application. They are essential for configuring the app's external services like databases and authentication providers.
+
+1. **Initialization**: Copy the `.env.example` file to `.env` to set up your environment variables.
+
+### Google Authentication
+
+Refer to the [NextAuth.js Google provider documentation](https://next-auth.js.org/providers/google) to obtain your Google OAuth credentials. Update the `.env` file with these credentials.
+
+### Database Setup
+
+1. **Supabase Project**: Create a project on [Supabase](https://supabase.com/). Remember to note your project password.
+2. **Connection String**: Navigate to `Settings > Database` in your Supabase project to find the connection string. Replace `DATABASE_URL` in your `.env` file with this string, including your project password.
+
+## Installing Dependencies
+
+With the environment configured, install all project dependencies by running:
+```
+pnpm i
+```
+
+## Update the database
+
+```
+pnpm db:push
+```
+
+## Running the Project
+
+Start the development server with:
+```
+pnpm run dev
+```
+
+You're all set! 🥳 
+

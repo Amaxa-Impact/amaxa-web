@@ -52,10 +52,17 @@ Environment variables allow you to manage project settings and secrets without h
 
 Refer to the [NextAuth.js Google provider documentation](https://next-auth.js.org/providers/google) to obtain your Google OAuth credentials. Update the `.env` file with these credentials.
 
+1. Create your own oAuth credential with personal email.
+2. Configure oAuth consent screen
+3. Scope?
+4. Create Credential --> OAUTH CLient ID
+
 ### Database Setup
 
 1. **Supabase Project**: Create a project on [Supabase](https://supabase.com/). Remember to note your project password.
 2. **Connection String**: Navigate to `Settings > Database` in your Supabase project to find the connection string. Replace `DATABASE_URL` in your `.env` file with this string, including your project password.
+
+Neon - Create accoutn - Create database
 
 ## Installing Dependencies
 

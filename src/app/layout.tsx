@@ -1,5 +1,8 @@
 import "@/styles/globals.css";
 
+//Import Bitter as the font here. - Sarah
+
+//1- Import the fonts we want
 import { Inter } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
@@ -8,10 +11,13 @@ import Sidebar from "@/components/Sidebar";
 import { Toaster } from "sonner";
 import FlowProvider from "./testlayout";
 
+//2 Do this for Bitter
+// https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
+
 
 export const metadata = {
   title: "Amaxa Impact",
@@ -26,6 +32,13 @@ export default function RootLayout({
   children: React.ReactNode;
   modal: React.ReactNode;
 }) {
+
+//3 Input Bitter instead - line 41
+// Question for you to investigate: the CSS before ${inter.variable} - what are the options to write in, what do they mean...
+// <body className={`font-sans ${inter.variable}`}>
+
+// Theme provider: how we change the theme in CSS (don't need to change this to change font initially)
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`font-sans ${inter.variable}`}>

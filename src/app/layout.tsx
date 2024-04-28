@@ -1,9 +1,10 @@
 import "@/styles/globals.css";
 
 //Import Bitter as the font here. - Sarah
-
 //1- Import the fonts we want
-import { Inter } from "next/font/google";
+
+// import { Inter } from "next/font/google";
+import { Bitter } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -13,10 +14,15 @@ import FlowProvider from "./testlayout";
 
 //2 Do this for Bitter
 // https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
+// const inter = Inter({
+//   subsets: ["latin"],
+//   variable: "--font-sans",
+// });
+
+const bitter = Bitter({
+  subsets: ["latin"], 
+  variable: "--font-serif",
+})
 
 
 export const metadata = {
@@ -41,7 +47,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`font-sans ${inter.variable}`}>
+      <body className={`font-serif ${bitter.variable}`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

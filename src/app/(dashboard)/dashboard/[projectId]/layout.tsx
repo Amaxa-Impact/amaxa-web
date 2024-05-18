@@ -3,6 +3,7 @@ import { Sidebar } from './sidebar'
 import { Navbar } from './_components/navbar'
 import { getUserAuth } from '@/server/auth'
 import { redirect } from 'next/navigation'
+import { Dashboard } from './_components/Dashboard'
 
 
 export default async function DashboardLayout({
@@ -25,6 +26,7 @@ export default async function DashboardLayout({
           {children}
         </div>
       </main>
+      <Dashboard/>
     </div>
   )
 }
